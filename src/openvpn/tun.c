@@ -982,15 +982,15 @@ do_ifconfig_ipv6(struct tuntap *tt, const char *ifname, int tun_mtu,
     else
     {
         /* example: netsh interface ipv6 set address interface=42
-         *                  2001:608:8003::d store=active
+         *                  2001:608:8003::d/128 store=active
          */
         char iface[64];
 
         openvpn_snprintf(iface, sizeof(iface), "interface=%lu",
                          tt->adapter_index);
-        argv_printf(&argv, "%s%sc interface ipv6 set address %s %s store=active",
+        argv_printf(&argv, "%s%sc interface ipv6 set address %s %s/%d store=active",
                     get_win_sys_path(), NETSH_PATH_SUFFIX, iface,
-                    ifconfig_ipv6_local);
+                    ifconfig_ipv6_local, 128);
         netsh_command(&argv, 4, M_FATAL);
         /* set ipv6 dns servers if any are specified */
         netsh_set_dns6_servers(tt->options.dns6, tt->options.dns6_len, ifname);
